@@ -51,7 +51,7 @@ jobs:
         run: |
           cd rustcast-cross/book
           title="${{ inputs.dev && 'Rustcast-cross docs [DEV]' || 'Rustcast-cross docs' }}"
-          MDBOOK_html__site_url="/book/" MDBOOK_book__title="Rustcast-cross docs [DEV]" mdbook build --dest-dir ../site/book
+          MDBOOK_html__site_url="/book/" MDBOOK_book__title="Rustcast-cross docs [DEV]" mdbook build --dest-dir ../../site/book
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
