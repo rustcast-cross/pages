@@ -11,9 +11,9 @@ on:
       dev:
         type: boolean
         default: true
-      master:
-        type: boolean
-        default: false # Since it's still broken
+      # master:
+      #   type: boolean
+      #   default: true
 
 jobs:
   dev:
@@ -27,48 +27,21 @@ jobs:
       contents: write
       id-token: write
 
-  master:
-    if: ${{ inputs.master }}
-    uses: ./.github/workflows/deploy_branch.yml
-    concurrency:
-      group: compile
-    with:
-      dev: false
-    permissions:
-      contents: write
-      id-token: write
-
-  # Not very DRY, but the upper one is going to go soon, sooooo
-
-  deploy_dev:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.dev && !inputs.master }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download dev artifact
-        if: ${{ inputs.dev }}
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: ${{ needs.dev.outputs.artifact_id }}
-          path: site/dev
-      - name: Download master artifact
-        if: ${{ inputs.master }}
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: ${{ needs.dev.outputs.artifact_id }}
-          path: site/
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+  # master:
+  #   if: ${{ inputs.master }}
+  #   uses: ./.github/workflows/deploy_branch.yml
+  #   concurrency:
+  #     group: compile
+  #   with:
+  #     dev: false
+  #   permissions:
+  #     contents: write
+  #     id-token: write
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{inputs.dev && inputs.master}}
-    needs: [dev, master]
+    needs: dev
+    # needs: [dev, master]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -78,12 +51,12 @@ jobs:
         with:
           artifact-ids: ${{ needs.dev.outputs.artifact_id }}
           path: site/dev
-      - name: Download master artifact
-        if: ${{ inputs.master }}
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: ${{ needs.dev.outputs.artifact_id }}
-          path: site/
+      # - name: Download master artifact
+      #   if: ${{ inputs.master }}
+      #   uses: actions/download-artifact@v5
+      #   with:
+      #     artifact-ids: ${{ needs.master.outputs.artifact_id }}
+      #     path: site/
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
