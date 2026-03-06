@@ -67,6 +67,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: ${{inputs.dev && inputs.master}}
     needs: [dev, master]
     steps:
       - name: Checkout
