@@ -63,7 +63,9 @@ jobs:
       - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
       - name: Run rustdoc
-        run: cargo doc --no-deps --target-dir site
+        run: |
+          cd rustcast-cross
+          cargo doc --no-deps --target-dir ../site
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
