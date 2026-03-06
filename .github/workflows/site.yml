@@ -1,6 +1,10 @@
 name: Deploy github pages
 on:
   workflow_dispatch:
+    inputs:
+        dev:
+          type: boolean
+          required: true
   workflow_call:
     inputs:
       dev:
@@ -41,7 +45,7 @@ jobs:
       - name: Build MDBook
         run: |
           cd book
-          title=${{ inputs.dev && 'Rustcast-cross docs [DEV]' || 'Rustcast-cross docs' }}
+          title="${{ inputs.dev && 'Rustcast-cross docs [DEV]' || 'Rustcast-cross docs' }}"
           MDBOOK_html__site_url="/book/" MDBOOK_book__title="Rustcast-cross docs [DEV]" mdbook build --dest-dir ../site/book
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -55,11 +59,16 @@ jobs:
     runs-on: windows-latest # linux needs system deps which i cba to add a step to add
     needs: ["asset_handle"]
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+      - name: Fix submodule branch
+        if: inputs.dev
+        run: |
+          cd rustcast-cross
+          git checkout dev
       - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
       - name: Run rustdoc
