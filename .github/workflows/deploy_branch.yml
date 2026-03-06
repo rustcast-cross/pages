@@ -107,6 +107,6 @@ jobs:
           path: site/doc
       - name: Upload finished artifact
         id: upload_artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           path: site
