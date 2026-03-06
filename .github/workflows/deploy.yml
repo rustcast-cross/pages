@@ -13,35 +13,15 @@ on:
 jobs:
   dev:
     if: ${{ inputs.dev }}
-    runs-on: ubuntu-latest
-    outputs:
-        artifact_id: ${{ steps.compile.outputs.artifact_id }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Compile
-        id: compile
-        uses: ./.github/workflows/deploy_branch.yml
-        with:
-          dev: true
+    uses: ./.github/workflows/deploy_branch.yml
+    with:
+        dev: true
 
   master:
     if: ${{ inputs.master }}
-    runs-on: ubuntu-latest
-    outputs:
-        artifact_id: ${{ steps.compile.outputs.artifact_id }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Compile
-        id: compile
-        uses: ./.github/workflows/deploy_branch.yml
-        with:
-            dev: false
+    uses: ./.github/workflows/deploy_branch.yml
+    with:
+        dev: false
 
   deploy:
     runs-on: ubuntu-latest

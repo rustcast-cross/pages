@@ -1,4 +1,5 @@
-name: Deploy single branch
+name: Compile single branch
+description: Compiles pages for a single branch out of dev or master
 on:
   workflow_call:
     inputs:
