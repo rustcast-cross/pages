@@ -103,12 +103,12 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: compiled_mdbook
-          path: site/book
+          path: ${{ inputs.dev && 'site/dev/book' || 'site/book' }}
       - name: Download artifacts
         uses: actions/download-artifact@v5
         with:
           name: compiled_rustdoc
-          path: site/doc
+          path: ${{ inputs.dev && 'site/dev/doc' || 'site/doc' }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
