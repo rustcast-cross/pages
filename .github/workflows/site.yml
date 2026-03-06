@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Copy assets
-        run: sh scripts/asset_copier.sh
+        run: sh ./asset_copier.sh
   mdbook:
     permissions:
       contents: write  # To push a branch
