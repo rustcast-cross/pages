@@ -7,11 +7,13 @@
 #
 # IMPORTANT: Always run from the repo root dir
 
-echo "Copying into site/assets"
-cp ./assets/icon/icon_opt.svg site/assets/
-cp ./assets/icon/icon64.png site/assets/
+echo "Syncing submodules"
+git submodule sync rustcast-cross
 
-echo "Copying into book/src/assets"
-cp ./assets/icon/icon_opt.svg book/src/assets/
+ls ./rustcast-cross/assets
+
+echo "Copying into site/assets"
+cp ./rustcast-cross/assets/icon/icon_opt.svg site/assets/
+cp ./rustcast-cross/assets/icon/icon64.png site/assets/
 
 echo "Finished copying"
