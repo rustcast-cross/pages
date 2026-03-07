@@ -22,7 +22,10 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Copy assets
-        run: sh ./asset_copier.sh
+        run: |
+          cp ./rustcast-cross/assets/icon/icon_opt.svg site/assets/
+          cp ./rustcast-cross/assets/icon/icon64.png site/assets/
+
   mdbook:
     permissions:
       contents: write  # To push a branch
