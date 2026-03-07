@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/deploy_branch.yml
     with:
       dev: true
+      artifact_prefix: dev
     permissions:
       contents: write
       id-token: write
@@ -20,6 +21,7 @@ jobs:
     uses: ./.github/workflows/deploy_branch.yml
     with:
       dev: false
+      artifact_prefix: master
     permissions:
       contents: write
       id-token: write
@@ -34,23 +36,23 @@ jobs:
       - name: Download MDBook artifacts (dev)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.dev.outputs.mdbook_artifact_id }}
+          name: dev_mdbook
           path: site/dev/book
       - name: Download rustdoc artifacts (dev)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.dev.outputs.rustdoc_artifact_id }}
+          name: dev_rustdoc
           path: site/dev/doc
 
       - name: Download MDBook artifacts (master)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.master.outputs.mdbook_artifact_id }}
+          name: master_mdbook
           path: site/book
       - name: Download rustdoc artifacts (master)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.master.outputs.rustdoc_artifact_id }}
+          name: master_rustdoc
           path: site/doc
         
       - name: Upload pages artifact

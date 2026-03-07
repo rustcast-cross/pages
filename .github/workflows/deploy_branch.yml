@@ -7,13 +7,10 @@ on:
         description: "Whether this is for the dev branch or not"
         type: boolean
         required: true
-    outputs:
-      rustdoc_artifact_id:
-        description: "The ID for the artifact containing the compiled rustdoc"
-        value: ${{ jobs.rustdoc.outputs.artifact_id }}
-      mdbook_artifact_id:
-        description: "The ID for the artifact containing the compiled mdbook"
-        value: ${{ jobs.mdbook.outputs.artifact_id }}
+      artifact_prefix:
+        description: "The prefix to give to artifact names"
+        type: string
+        required: true
 
 jobs:
   asset_handle:
@@ -31,8 +28,6 @@ jobs:
           cp ./rustcast-cross/assets/icon/icon64.png site/assets/
 
   mdbook:
-    outputs:
-      artifact_id: ${{ steps.upload.outputs.artifact-id }}
     permissions:
       contents: write  # To push a branch
       id-token: write # To update the deployment status
@@ -60,11 +55,9 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: mdbook_${{ github.run_attempt }}
+          name: ${{ inputs.artifact_prefix }}_mdbook
           path: site/book
   rustdoc:
-    outputs:
-      artifact_id: ${{ steps.upload.outputs.artifact-id }}
     permissions:
       contents: write  # To push a branch
       id-token: write # To update the deployment status
@@ -86,5 +79,5 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: rustdoc_${{ github.run_attempt }}
+          name: ${{ inputs.artifact_prefix }}_rustdoc
           path: site/doc/rustcast
