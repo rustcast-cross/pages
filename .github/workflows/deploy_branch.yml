@@ -44,7 +44,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-          ref: ${{ inputs.dev && 'dev' || 'master' }}
       - name: Install latest mdbook
         run: |
           tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
@@ -76,7 +75,6 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
-          ref: ${{ inputs.dev && 'dev' || 'master' }}
       - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
       - name: Run rustdoc
