@@ -39,7 +39,6 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Fix submodule branch
-        if: inputs.dev
         run: |
           cd rustcast-cross
           git checkout dev
@@ -73,7 +72,6 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Fix submodule branch
-        if: inputs.dev
         run: |
           cd rustcast-cross
           git checkout dev
