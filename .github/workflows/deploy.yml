@@ -30,16 +30,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Download dev artifact
+
+      - name: Download MDBook artifacts (dev)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.dev.outputs.artifact_id }}
-          path: site/dev
-      - name: Download master artifact
+          artifact-ids: ${{ needs.dev.outputs.mdbook_artifact_id }}
+          path: site/dev/book
+      - name: Download rustdoc artifacts (dev)
         uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{ needs.master.outputs.artifact_id }}
-          path: site/
+          artifact-ids: ${{ needs.dev.outputs.rustdoc_artifact_id }}
+          path: site/dev/doc
+
+      - name: Download MDBook artifacts (master)
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ needs.master.outputs.mdbook_artifact_id }}
+          path: site/book
+      - name: Download rustdoc artifacts (master)
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ needs.master.outputs.rustdoc_artifact_id }}
+          path: site/doc
+        
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

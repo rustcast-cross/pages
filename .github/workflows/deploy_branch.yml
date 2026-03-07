@@ -4,12 +4,16 @@ on:
   workflow_call:
     inputs:
       dev:
+        description: "Whether this is for the dev branch or not"
         type: boolean
         required: true
     outputs:
-      artifact_id:
-        description: "The ID for the artifact containing the site"
-        value: ${{ jobs.package.outputs.artifact_id }}
+      rustdoc_artifact_id:
+        description: "The ID for the artifact containing the compiled rustdoc"
+        value: ${{ jobs.rustdoc.outputs.artifact_id }}
+      mdbook_artifact_id:
+        description: "The ID for the artifact containing the compiled mdbook"
+        value: ${{ jobs.mdbook.outputs.artifact_id }}
 
 jobs:
   asset_handle:
@@ -27,6 +31,8 @@ jobs:
           cp ./rustcast-cross/assets/icon/icon64.png site/assets/
 
   mdbook:
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
     permissions:
       contents: write  # To push a branch
       id-token: write # To update the deployment status
@@ -39,9 +45,10 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Fix submodule branch
-        run: |
-          cd rustcast-cross
-          git checkout dev
+        run: cd rustcast-cross
+      - if: ${{ inputs.dev }}
+        name: Go to dev
+        run: git checkout dev
       - name: Install latest mdbook
         run: |
           tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
@@ -55,11 +62,13 @@ jobs:
           title="${{ inputs.dev && 'Rustcast-cross docs [DEV]' || 'Rustcast-cross docs' }}"
           MDBOOK_html__site_url="/book/" MDBOOK_book__title="Rustcast-cross docs [DEV]" mdbook build --dest-dir ../../site/book
       - name: Upload artifacts
+        id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: compiled_mdbook
           path: site/book
   rustdoc:
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
     permissions:
       contents: write  # To push a branch
       id-token: write # To update the deployment status
@@ -72,9 +81,10 @@ jobs:
           fetch-depth: 0
           submodules: true
       - name: Fix submodule branch
-        run: |
-          cd rustcast-cross
-          git checkout dev
+        run: cd rustcast-cross
+      - if: ${{ inputs.dev }}
+        name: Go to dev
+        run: git checkout dev
       - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
       - name: Run rustdoc
@@ -82,31 +92,7 @@ jobs:
           cd rustcast-cross
           cargo doc --no-deps --target-dir ../site
       - name: Upload artifacts
+        id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: compiled_rustdoc
-          path: site/doc
-  package:
-    permissions:
-      contents: write  # To push a branch
-      id-token: write # To update the deployment status
-    runs-on: ubuntu-latest
-    needs: [mdbook, rustdoc]
-    outputs: 
-        artifact_id: ${{steps.upload_artifact.outputs.artifact-id}}
-    steps:
-      - name: Download MDBook artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: compiled_mdbook
-          path: site/book
-      - name: Download rustdoc artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: compiled_rustdoc
-          path: site/doc
-      - name: Upload finished artifact
-        id: upload_artifact
-        uses: actions/upload-artifact@v5
-        with:
-          path: site
+          path: site/doc/rustcast
