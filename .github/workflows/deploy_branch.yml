@@ -80,4 +80,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_prefix }}_rustdoc
-          path: site/doc/rustcast
+          path: site/doc
