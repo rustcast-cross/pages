@@ -38,22 +38,11 @@ jobs:
         with:
           name: dev_mdbook
           path: site/dev/book
-      - name: Download rustdoc artifacts (dev)
-        uses: actions/download-artifact@v5
-        with:
-          name: dev_rustdoc
-          path: site/dev/doc
-
       - name: Download MDBook artifacts (master)
         uses: actions/download-artifact@v5
         with:
           name: master_mdbook
           path: site/book
-      - name: Download rustdoc artifacts (master)
-        uses: actions/download-artifact@v5
-        with:
-          name: master_rustdoc
-          path: site/doc
         
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
