@@ -74,7 +74,7 @@ jobs:
       - name: Run rustdoc
         run: |
           cd rustcast-cross
-          cargo doc --no-deps --target-dir ../site
+          cargo doc --no-deps --all-features --document-private-items --target-dir ../site
       - name: Upload artifacts
         id: upload
         uses: actions/upload-artifact@v4
