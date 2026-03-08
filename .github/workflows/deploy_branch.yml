@@ -63,33 +63,3 @@ jobs:
         with:
           name: ${{ inputs.artifact_prefix }}_mdbook
           path: site/book
-  rustdoc:
-    permissions:
-      contents: write  # To push a branch
-      id-token: write # To update the deployment status
-    runs-on: windows-latest # linux needs system deps which i cba to add a step to add
-    needs: ["asset_handle"]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: 'true'
-      - name: Set up Rust (stable)
-        uses: dtolnay/rust-toolchain@stable
-      - name: Fix submodule branch
-        if: ${{ inputs.dev }}
-        run: |
-          cd rustcast-cross
-          git checkout dev
-          git pull --all
-      - name: Run rustdoc
-        run: |
-          cd rustcast-cross
-          cargo doc --no-deps --all-features --document-private-items --target-dir ../site
-      - name: Upload artifacts
-        id: upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.artifact_prefix }}_rustdoc
-          path: site/doc
