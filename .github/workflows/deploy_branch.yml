@@ -25,7 +25,7 @@ jobs:
       - name: Copy assets
         run: |
           cp ./rustcast-cross/assets/icon/icon_opt.svg site/assets/
-          cp ./rustcast-cross/assets/icon/icon64.png site/assets/
+          cp ./rustcast-cross/assets/icon/icon.ico site/assets/
 
   mdbook:
     permissions:
