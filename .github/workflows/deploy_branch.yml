@@ -46,6 +46,12 @@ jobs:
           mkdir mdbook
           curl -sSL $url | tar -xz --directory=./mdbook
           echo `pwd`/mdbook >> $GITHUB_PATH
+      - name: Fix submodule branch
+        if: ${{ inputs.dev }}
+        run: |
+          cd rustcast-cross
+          git checkout dev
+          git pull --all
       - name: Build MDBook
         run: |
           cd rustcast-cross/book
@@ -71,6 +77,12 @@ jobs:
           submodules: 'true'
       - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
+      - name: Fix submodule branch
+        if: ${{ inputs.dev }}
+        run: |
+          cd rustcast-cross
+          git checkout dev
+          git pull --all
       - name: Run rustdoc
         run: |
           cd rustcast-cross
